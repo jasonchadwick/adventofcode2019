@@ -2,12 +2,6 @@
 
 (ns advent2019.util)
 
-; operates on an element of a vector, replacing the element with
-; the output of [op]
-(defn operate [op v pos]
-  (assoc v (nth v (+ 3 pos)) (op (nth v (nth v (+ 1 pos)))
-                                 (nth v (nth v (+ 2 pos))))))
-
 ; zips coll1 and coll2 and maps f to new list
 (defn zip-map [f coll1 coll2 acc]
   (if (seq coll1)
