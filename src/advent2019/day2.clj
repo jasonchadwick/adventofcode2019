@@ -48,3 +48,6 @@
       (cond (>= y 0) (+ (* 100 x) y)
             (>= x 99) nil
             :else (recur (inc x))))))
+
+;answers for parts 1 and 2
+`(~(do-1202 "resources/day2.txt") ~(test-1-2 (make-vec "resources/day2.txt") 19690720))

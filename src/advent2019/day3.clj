@@ -59,3 +59,6 @@
         pts1 (reverse (do-move nil 0 '(0 0) (first moves) nil))
         pts2 (reverse (do-move nil 0 '(0 0) (second moves) nil))]
     (min-steps pts1 pts2 (get-intersections pts1 pts2))))
+
+;answers for parts 1 and 2
+`(~(min-move "resources/day3.txt") ~(get-min-steps "resources/day3.txt"))

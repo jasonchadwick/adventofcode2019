@@ -13,3 +13,6 @@
     (reduce + (map (fn [str] 
                      (fuel (Integer/parseInt str)))
                    (line-seq rdr)))))
+
+;answer for part 2
+`(~(add-fuels "resources/day1.txt"))
