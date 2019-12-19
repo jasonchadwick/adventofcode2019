@@ -1,5 +1,4 @@
-(ns advent2019.core
-  (:gen-class)
+(ns advent2019.day1
   (:require [clojure.java.io]))
 
 (defn fuel [mass]

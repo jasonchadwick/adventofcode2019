@@ -1,4 +1,5 @@
-(ns advent2019.core
+(ns advent2019.day3
+  (:require [advent2019.util :as util])
   (:require [clojure.java.io])
   (:require [clojure.string])
   (:require [clojure.set]))
@@ -44,15 +45,10 @@
     acc
     (recur (rest ptlist) (inc acc) pt)))
 
-(defn zipadd [coll1 coll2 acc]
-  (if (seq coll1)
-    (recur (rest coll1) (rest coll2) (cons (+ (first coll1) (first coll2)) acc))
-    acc))
-
 (defn min-steps [pts1 pts2 ints]
   (let [steps1 (map (partial steps-to-pt pts1 1) ints)
         steps2 (map (partial steps-to-pt pts2 1) ints)]
-    (apply min (zipadd steps1 steps2 nil))))
+    (apply min (util/zip-map + steps1 steps2 nil))))
 
 (defn get-min-steps [fname]
   (let [moves (parse-moves fname)

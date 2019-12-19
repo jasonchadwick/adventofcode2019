@@ -1,4 +1,5 @@
-(ns advent2019.core
+(ns advent2019.day2
+  (:require [advent2019.util :as util])
   (:require [clojure.java.io])
   (:require [clojure.string]))
 
@@ -6,17 +7,13 @@
   (with-open [rdr (clojure.java.io/reader fname)]
     (vec (map (fn [s] (Integer/parseInt s)) (clojure.string/split (slurp rdr) #",")))))
 
-(defn operate [op v pos]
-  (assoc v (nth v (+ 3 pos)) (op (nth v (nth v (+ 1 pos)))
-                                 (nth v (nth v (+ 2 pos))))))
-
 (defn run-code-1 [v pos]
   (if (>= pos (count v))
     (throw (Exception. "oh no"))
     (case (nth v pos)
       99 (nth v 0)
-      1 (run-code-1 (operate + v pos) (+ 4 pos))
-      2 (run-code-1 (operate * v pos) (+ 4 pos)))))
+      1 (run-code-1 (util/operate + v pos) (+ 4 pos))
+      2 (run-code-1 (util/operate * v pos) (+ 4 pos)))))
 
 (defn run-code [v]
   (run-code-1 v 0))
