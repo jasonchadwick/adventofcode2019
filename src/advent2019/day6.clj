@@ -1,7 +1,6 @@
 (ns advent2019.day6
   (:require [advent2019.util :as util])
-  (:require [clojure.java.io])
-  (:require [clojure.zip :as zip]))
+  (:require [clojure.java.io]))
 
 ; returns a map, keys are orbitING bodies, values are orbitED bodies 
 ; assumes all body names are 3 letters and format is ABC)DEF
@@ -36,7 +35,9 @@
 
 (defn total-orbits [fname]
   (let [o-map (map-from-file fname)]
-   (util/mapreduce (partial orbits o-map 0) + 0 (keys o-map))))
+   (->> (keys o-map)
+        (map (partial orbits o-map 0))
+        (reduce + 0))))
 
 ; day 2
 

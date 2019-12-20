@@ -9,13 +9,14 @@
   (with-open [rdr (clojure.java.io/reader fname)]
     (vec (map (fn [s] (Integer/parseInt s)) (clojure.string/split (slurp rdr) #",")))))
 
-; creates a function which gives the nth argument value
-; (output function should only be used to get *VALUES* not indices)
+; creates a function which gives the nth argument's value
+; (output function should only be used to get *VALUES* not output indices)
 (defn make-val-fn [v args arg-modes]
   (fn [n] (if (== 0 (nth arg-modes n))
             (nth v (nth args n))
             (nth args n)))) 
 
+; argument number for each opcode (opcode mod 10)
 (def argnums [0 3 3 1 1 2 2 3 3 0])
 
 (defn output [v]
