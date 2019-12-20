@@ -1,4 +1,6 @@
 (ns advent2019.day5
-  (:require [advent2019.util :as util]))
+  (:require [advent2019.intcode]))
 
-;todo
+; (most of day 5 code was written in intcode.clj)
+
+(advent2019.intcode/run-from-file "resources/day5.txt" :input 1)

@@ -3,10 +3,13 @@
 (ns advent2019.util)
 
 ; zips coll1 and coll2 and maps f to new list
-(defn zip-map [f coll1 coll2 acc]
-  (if (seq coll1)
+(defn zip-map-1 [f coll1 coll2 acc]
+  (if (and (seq coll1) (seq coll2))
     (recur f (rest coll1) (rest coll2) (cons (f (first coll1) (first coll2)) acc))
-    acc))
+    (reverse acc)))
+
+(defn zip-map [f coll1 coll2]
+  (zip-map-1 f coll1 coll2 nil))
 
 ; true if elem is in coll, false otherwise
 (defn mem [elem coll]
@@ -29,4 +32,4 @@
 
 ; nth (from right) digit of x
 (defn digit [x n]
-  (mod (quot x (Math/pow 10 n)) 10))
+  (int (mod (quot x (Math/pow 10 n)) 10)))

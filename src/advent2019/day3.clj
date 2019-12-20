@@ -48,7 +48,7 @@
 (defn min-steps [pts1 pts2 ints]
   (let [steps1 (map (partial steps-to-pt pts1 1) ints)
         steps2 (map (partial steps-to-pt pts2 1) ints)]
-    (apply min (util/zip-map + steps1 steps2 nil))))
+    (apply min (util/zip-map + steps1 steps2))))
 
 (defn get-min-steps [fname]
   (let [moves (parse-moves fname)
