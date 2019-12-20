@@ -8,18 +8,6 @@
 
 ;part II
 
-;CPS function - overflows because of closure's small stack size
-(defn find-vals [v s k target]
-  (cond
-    (= (intcode/run-code v) target) v
-    (and (>= (nth v 1) 65) (>= (nth v 2) 77)) (k)
-    (>= (nth v 1) 70) (recur
-                      (assoc v 2 (inc (nth v 2))) s k target)
-    (>= (nth v 2) 77) (recur
-                      (assoc v 1 (inc (nth v 1))) s k target)
-    :else (recur (assoc v 1 (inc (nth v 1))) s
-                 (fn [] (find-vals (assoc v 2 (inc (nth v 2))) s k target)) target)))
-
 (defn test-1-2 [v target]
   (loop [x 0]
     (let [v (assoc v 1 x)
