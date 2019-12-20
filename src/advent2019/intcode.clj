@@ -16,7 +16,7 @@
             (nth v (nth args n))
             (nth args n)))) 
 
-(def argnums [0 3 3 1 1 0 0 0 0 0])
+(def argnums [0 3 3 1 1 2 2 3 3 0])
 
 (defn output [v]
   (nth v 0))
@@ -35,14 +35,22 @@
                         (cons (util/digit code (+ 2 n)) (get-modes code (inc n) max))))
                   (nth v pos) 0 arg-ct))
           newv (case opcode
-                 99 (output v)
                  1 (assoc v (nth args 2) (+ (valfn 0) (valfn 1)))
                  2 (assoc v (nth args 2) (* (valfn 0) (valfn 1)))
                  3 (assoc v (nth args 0) input)
-                 4 (assoc v 0 (nth v (nth args 0))))]
-      (if (vector? newv)
-        (recur newv (output newv) (+ 1 arg-ct pos))
-        newv))))
+                 4 (assoc v 0 (nth v (nth args 0)))
+                 5 (if (zero? (valfn 0)) v `(~v ~(valfn 1)))
+                 6 (if (zero? (valfn 0)) `(~v ~(valfn 1)) v)
+                 7 (assoc v (nth args 2)
+                          (if (< (valfn 0) (valfn 1)) 1 0))
+                 8 (assoc v (nth args 2)
+                          (if (== (valfn 0) (valfn 1)) 1 0))
+
+                 99 (output v))]
+      (cond
+        (number? newv) newv
+        (vector? newv) (recur newv (output newv) (+ 1 arg-ct pos))
+        (coll? newv) (recur (first newv) (output (first newv)) (second newv))))))
 
 (defn run-code [v & {:keys [input] :or {input nil}}]
   (run-code-1 v (if (nil? input) (nth v 0) input) 0))
