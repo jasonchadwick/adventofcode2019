@@ -16,17 +16,17 @@
             (nth v (nth args n))
             (nth args n)))) 
 
-; argument number for each opcode (opcode mod 10)
+; argument number for each opcode (index is opcode mod 10)
 (def argnums [0 3 3 1 1 2 2 3 3 0])
 
 (defn output [v]
   (nth v 0))
 
-; todo: input is a list. if nil, then input -> (output v)
 (defn run-code-1 [v inputs pos]
   (if (>= pos (count v))
     (throw (Exception. "cursor too large"))
-    (let [opcode (mod (nth v pos) 100)
+    (let [;input (if (empty? inputs) (output v) (first inputs))
+          opcode (mod (nth v pos) 100)
           arg-ct (nth argnums (mod opcode 10))
           args (map (fn [n] (nth v (+ 1 n pos)))
                     (range arg-ct))
@@ -36,14 +36,13 @@
                     (if (>= n max) nil
                         (cons (util/digit code (+ 2 n)) (get-modes code (inc n) max))))
                   (nth v pos) 0 arg-ct))
-          input (if (empty? inputs) (output v) (first inputs))
           newv (case opcode
                  1 (assoc v (nth args 2) (+ (valfn 0) (valfn 1)))
                  2 (assoc v (nth args 2) (* (valfn 0) (valfn 1)))
-                 3 (assoc v (nth args 0) input)
+                 3 (assoc v (nth args 0) (first inputs))
                  4 (assoc v 0 (nth v (nth args 0)))
-                 5 (if (zero? (valfn 0)) v `(~v ~(valfn 1)))
-                 6 (if (zero? (valfn 0)) `(~v ~(valfn 1)) v)
+                 5 (if (zero? (valfn 0)) v `(~v ~(nth v (nth args 1))))
+                 6 (if (zero? (valfn 0)) `(~v ~(nth v (nth args 1))) v)
                  7 (assoc v (nth args 2)
                           (if (< (valfn 0) (valfn 1)) 1 0))
                  8 (assoc v (nth args 2)
@@ -53,9 +52,13 @@
       (cond
         (number? newv) newv
         (vector? newv) (recur newv 
-                              (util/safe-cdr inputs nil) (+ 1 arg-ct pos))
+                              (if (== opcode 3) (util/safe-cdr inputs nil)
+                                  inputs) 
+                              (+ 1 arg-ct pos))
         (coll? newv) (recur (first newv) 
-                            (util/safe-cdr inputs nil) (second newv))))))
+                            (if (== opcode 3) (util/safe-cdr inputs nil)
+                                inputs) 
+                            (second newv))))))
 
 (defn run-code [v & inputs]
   (run-code-1 v inputs 0))

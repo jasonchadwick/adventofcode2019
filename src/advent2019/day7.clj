@@ -19,3 +19,5 @@
            d (set/difference nums #{a b c})
            e (set/difference nums #{a b c d})]
        (try-settings `(~a ~b ~c ~d ~e) 0)))))
+
+(try-all)
