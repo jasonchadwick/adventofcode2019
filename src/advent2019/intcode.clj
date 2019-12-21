@@ -19,14 +19,12 @@
 ; argument number for each opcode (index is opcode mod 10)
 (def argnums [0 3 3 1 1 2 2 3 3 0])
 
-(defn output [v]
-  (nth v 0))
 
-(defn run-code-1 [v inputs pos]
+; idea: re-implement run-code, returns a lazy seq (each new cell is an iteration?)
+(defn run-code [v pos inputs]
   (if (>= pos (count v))
     (throw (Exception. "cursor too large"))
-    (let [;input (if (empty? inputs) (output v) (first inputs))
-          opcode (mod (nth v pos) 100)
+    (let [opcode (mod (nth v pos) 100)
           arg-ct (nth argnums (mod opcode 10))
           args (map (fn [n] (nth v (+ 1 n pos)))
                     (range arg-ct))
@@ -41,28 +39,24 @@
                  2 (assoc v (nth args 2) (* (valfn 0) (valfn 1)))
                  3 (assoc v (nth args 0) (first inputs))
                  4 (assoc v 0 (nth v (nth args 0)))
-                 5 (if (zero? (valfn 0)) v `(~v ~(nth v (nth args 1))))
-                 6 (if (zero? (valfn 0)) `(~v ~(nth v (nth args 1))) v)
+                 5 (if (zero? (valfn 0)) v `(~v ~(valfn 1)))
+                 6 (if (zero? (valfn 0)) `(~v ~(valfn 1)) v)
                  7 (assoc v (nth args 2)
                           (if (< (valfn 0) (valfn 1)) 1 0))
                  8 (assoc v (nth args 2)
                           (if (== (valfn 0) (valfn 1)) 1 0))
 
-                 99 (output v))]
+                 99 `(~(first v) ~pos))]
       (cond
-        (number? newv) newv
-        (vector? newv) (recur newv 
+        (== opcode 99) newv
+        (vector? newv) (recur newv
+                              (+ 1 arg-ct pos)
                               (if (== opcode 3) (util/safe-cdr inputs nil)
-                                  inputs) 
-                              (+ 1 arg-ct pos))
-        (coll? newv) (recur (first newv) 
+                                  inputs))
+        (coll? newv) (recur (first newv)
+                            (second newv)
                             (if (== opcode 3) (util/safe-cdr inputs nil)
-                                inputs) 
-                            (second newv))))))
+                                inputs))))))
 
-(defn run-code [v & inputs]
-  (run-code-1 v inputs 0))
-
-(defn run-from-file [fname & inputs]
-  (let [v (make-vec fname)]
-    (run-code-1 v inputs 0)))
+(defn run-from-file [fname pos inputs]
+    (run-code (make-vec fname) pos inputs))
