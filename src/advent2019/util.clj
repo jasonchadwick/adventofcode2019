@@ -54,6 +54,10 @@
 (defn zip [coll1 coll2]
   (zip-1 coll1 coll2 nil))
 
-(defn seq-of [x length]
-  (if (== length 0) nil
-      (cons x (seq-of x (dec length)))))
+(defn tabulate [f length]
+  (loop [n 0 acc nil]
+    (if (>= n length) acc
+        (cons (f n) acc))))
+
+(defn safe-cdr [coll backup]
+  (if (empty? coll) backup (rest coll)))

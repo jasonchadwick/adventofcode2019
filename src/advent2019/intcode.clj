@@ -22,7 +22,8 @@
 (defn output [v]
   (nth v 0))
 
-(defn run-code-1 [v input pos]
+; todo: input is a list. if nil, then input -> (output v)
+(defn run-code-1 [v inputs pos]
   (if (>= pos (count v))
     (throw (Exception. "cursor too large"))
     (let [opcode (mod (nth v pos) 100)
@@ -35,6 +36,7 @@
                     (if (>= n max) nil
                         (cons (util/digit code (+ 2 n)) (get-modes code (inc n) max))))
                   (nth v pos) 0 arg-ct))
+          input (if (empty? inputs) (output v) (first inputs))
           newv (case opcode
                  1 (assoc v (nth args 2) (+ (valfn 0) (valfn 1)))
                  2 (assoc v (nth args 2) (* (valfn 0) (valfn 1)))
@@ -50,12 +52,14 @@
                  99 (output v))]
       (cond
         (number? newv) newv
-        (vector? newv) (recur newv (output newv) (+ 1 arg-ct pos))
-        (coll? newv) (recur (first newv) (output (first newv)) (second newv))))))
+        (vector? newv) (recur newv 
+                              (util/safe-cdr inputs nil) (+ 1 arg-ct pos))
+        (coll? newv) (recur (first newv) 
+                            (util/safe-cdr inputs nil) (second newv))))))
 
-(defn run-code [v & {:keys [input] :or {input nil}}]
-  (run-code-1 v (if (nil? input) (nth v 0) input) 0))
+(defn run-code [v & inputs]
+  (run-code-1 v inputs 0))
 
-(defn run-from-file [fname & {:keys [input] :or {input nil}}]
+(defn run-from-file [fname & inputs]
   (let [v (make-vec fname)]
-    (run-code-1 v (if (nil? input) (nth v 0) input) 0)))
+    (run-code-1 v inputs 0)))
