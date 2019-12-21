@@ -55,7 +55,7 @@
             (recur o-map target 
                    (cons cur visited) 
                    (concat (util/zip next 
-                                     (util/tabulate (fn [n] (inc dist)) (count next)))
+                                     (util/tabulate (fn [n] (+ (* 0 n) (inc dist))) (count next)))
                            (rest queue)))))))
 
 (defn bfs-from-file [fname start target]
