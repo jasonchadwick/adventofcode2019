@@ -3,12 +3,13 @@
 
 
 ; zips coll1 and coll2 and maps f to new list
-(defn zip-map-1 [f coll1 coll2 acc]
-  (if (and (seq coll1) (seq coll2))
-    (recur f (rest coll1) (rest coll2) (cons (f (first coll1) (first coll2)) acc))
-    (reverse acc)))
 (defn zip-map [f coll1 coll2]
-  (zip-map-1 f coll1 coll2 nil))
+  (loop [c1 coll1
+         c2 coll2
+         acc nil]
+    (if (and (seq c1) (seq c2))
+      (recur (rest c1) (rest c2) (cons (f (first c1) (first c2)) acc))
+      (reverse acc))))
 
 ; true if elem is in coll, false otherwise
 (defn mem [elem coll]
@@ -47,12 +48,13 @@
         (= x (first coll)) true
         :else (recur x (rest coll))))
 
-(defn zip-1 [coll1 coll2 acc]
-  (if (or (empty? coll1) (empty? coll2))
-    (reverse acc)
-    (recur (rest coll1) (rest coll2) (cons `(~(first coll1) ~(first coll2)) acc))))
 (defn zip [coll1 coll2]
-  (zip-1 coll1 coll2 nil))
+  (loop [c1 coll1
+         c2 coll2
+         acc nil]
+    (if (or (empty? c1) (empty? c2))
+      (reverse acc)
+      (recur (rest c1) (rest c2) (cons `(~(first c1) ~(first c2)) acc)))))
 
 (defn tabulate [f length]
   (loop [n 0 acc nil]
@@ -61,3 +63,11 @@
 
 (defn safe-cdr [coll backup]
   (if (empty? coll) backup (rest coll)))
+
+(defn subcoll [x start end]
+  (loop [y x
+         s start
+         e end
+         acc nil]
+    (if (== s e) acc
+        (recur x s (dec e) (cons (nth y e) acc)))))
