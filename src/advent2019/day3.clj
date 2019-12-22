@@ -8,8 +8,8 @@
   (clojure.set/intersection (set coll1) (set coll2)))
 
 (defn min-intersection [ints]
-  (apply min (map (fn [pt] (+ (Math/abs (first pt)) (Math/abs (second pt))))
-                  ints)))
+  (apply min (map #(+ (Math/abs (first %)) (Math/abs (second %)))
+              ints)))
 
 (defn do-move [dir moves-left cur coll pts]
   (cond 
@@ -31,8 +31,10 @@
 
 (defn parse-moves [fname]
   (with-open [rdr (clojure.java.io/reader fname)]
-    (map (fn [str] (clojure.string/split (clojure.string/trim-newline str) #","))
-         (clojure.string/split (slurp rdr) #"\n"))))
+    (map #(-> %
+              (clojure.string/trim-newline)
+              (clojure.string/split #","))
+     (clojure.string/split (slurp rdr) #"\n"))))
 
 (defn min-move [fname]
   (let [moves (parse-moves fname)]

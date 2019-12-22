@@ -43,11 +43,6 @@
 (defn insert-second [x coll]
   (cons (first coll) (cons x (rest coll))))
 
-(defn in-seq [x coll]
-  (cond (empty? coll) false
-        (= x (first coll)) true
-        :else (recur x (rest coll))))
-
 (defn zip [coll1 coll2]
   (loop [c1 coll1
          c2 coll2

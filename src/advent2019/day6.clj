@@ -48,8 +48,9 @@
   (if (empty? queue) -1
       (let [cur (first (first queue))
             dist (second (first queue))
-            next (filter (fn [x] (not (some identity `(~(util/in-seq x visited)
-                                                       ~(util/in-seq x (map (fn [x] (first x)) queue))))))
+            next (filter #(not (some identity 
+                                     `(~(util/mem % visited)
+                                       ~(util/mem % (map first queue)))))
                          (o-map cur))]
         (if (util/in-seq target next) (inc dist)
             (recur o-map target 
