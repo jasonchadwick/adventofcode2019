@@ -61,6 +61,12 @@
     (if (>= n length) acc
         (cons (f n) acc))))
 
+(defn repeated-seq [x length]
+  (loop [n length
+         acc nil]
+    (if (== 0 n) acc
+        (recur (dec n) (cons x acc)))))
+
 (defn safe-cdr [coll backup]
   (if (empty? coll) backup (rest coll)))
 
