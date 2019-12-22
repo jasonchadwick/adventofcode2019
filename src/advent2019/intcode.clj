@@ -62,13 +62,7 @@
           outputting `(~newv ~newpos ~newinputs)
           :else (recur newv newpos newinputs)))))
 
-;(defn run-from-file [fname pos inputs]
-;    (run-code (make-vec fname) pos inputs))
-
 (defn run-to-end [v pos inputs]
   (let [output (run-code v pos inputs)]
     (if (number? output) output
         (recur (first output) (second output) (nth output 2)))))
-
-;(defn run-to-end-f [fname pos inputs]
-;  (run-to-end (make-vec fname) pos inputs))
