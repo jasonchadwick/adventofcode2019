@@ -1,4 +1,5 @@
-(ns advent2019.util)
+(ns advent2019.util
+  (:require [clojure.string :as string]))
 ; general functions that may be useful in more than one file
 
 
@@ -72,3 +73,9 @@
          acc nil]
     (if (== s e) acc
         (recur x s (dec e) (cons (nth y e) acc)))))
+
+(defn count-char [string c]
+  (loop [str string acc 0]
+    (let [idx (string/index-of str c)]
+      (if (nil? idx) acc
+          (recur (subs str (inc idx)) (inc acc))))))
