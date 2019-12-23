@@ -52,9 +52,9 @@
       (recur (rest c1) (rest c2) (cons `(~(first c1) ~(first c2)) acc)))))
 
 (defn tabulate [f length]
-  (loop [n 0 acc nil]
-    (if (>= n length) acc
-        (cons (f n) acc))))
+  (loop [n (dec length) acc nil]
+    (if (< n 0) acc
+        (recur (dec n) (cons (f n) acc)))))
 
 (defn repeated-seq [x length]
   (loop [n length
