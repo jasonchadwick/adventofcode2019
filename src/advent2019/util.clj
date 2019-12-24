@@ -80,6 +80,19 @@
       (if (nil? idx) acc
           (recur (subs str (inc idx)) (inc acc))))))
 
-;(defmacro dprint [x]
-;  (when (debug) (println x))
-;  x)
+(defn dprint [s x]
+  (if (= s 't) (println x) nil)
+  x)
+
+(defn only-or [x y]
+  (and (not (and x y))
+       (or x y)))
+
+(defn diff-signs [x y]
+  (only-or (not (= (Math/abs x) x))
+      (not (= (Math/abs y) y))))
+
+(defn prod [coll1 coll2]
+  (for [c1 coll1
+        c2 coll2]
+    `(~c1 ~c2)))
