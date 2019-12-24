@@ -14,8 +14,6 @@
 ; Opcode 9 adjusts the relative base by the value of its only parameter. The relative base increases (or decreases, if the value is negative) by the value of the parameter.
 ; Opcode 99 means that the program is finished and should immediately halt.
 
-(def debug false)
-
 (defn make-vec [fname]
   (with-open [rdr (clojure.java.io/reader fname)]
     (vec (map (fn [s] (Integer/parseInt s)) (clojure.string/split (slurp rdr) #",")))))
@@ -42,7 +40,8 @@
               0 0 0 0 0 0 0 0 0 0])
 
 ; TODO: add support for "unbounded array" style memory
-; 
+; not sure why it doesnt work for [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+;                 supposed to "self-replicate"
 (defn code-step [v pos rel inputs]
   ;(println v pos rel inputs)
   (let [opcode (mod (nth v pos) 100)
