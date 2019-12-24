@@ -4,7 +4,7 @@
   (:require [clojure.string]))
 
 (defn do-1202 [fname]
-  (intcode/run-to-end (assoc (intcode/make-vec fname) 1 12 2 2) 0 nil))
+  (intcode/run-to-end (assoc (intcode/make-vec fname) 1 12 2 2) 0 0 nil))
 
 ;part II
 
@@ -13,7 +13,7 @@
     (let [v (assoc v 1 x)
           y (loop [y 0]
               (let [v (assoc v 2 y)
-                    ans (intcode/run-to-end v 0 nil)]
+                    ans (intcode/run-to-end v 0 0 nil)]
                 (cond (= ans target) y
                       (>= y 99) -1
                       :else (recur (inc y)))))]

@@ -79,3 +79,7 @@
     (let [idx (string/index-of str c)]
       (if (nil? idx) acc
           (recur (subs str (inc idx)) (inc acc))))))
+
+;(defmacro dprint [x]
+;  (when (debug) (println x))
+;  x)
