@@ -41,7 +41,8 @@
 (def argnums [0 3 3 1 1 2 2 3 3 1
               0 0 0 0 0 0 0 0 0 0])
 
-;TODO: add support for "unbounded array" style memory
+; TODO: add support for "unbounded array" style memory
+; 
 (defn code-step [v pos rel inputs]
   ;(println v pos rel inputs)
   (let [opcode (mod (nth v pos) 100)
@@ -89,12 +90,12 @@
 
 (defn run-code [v pos rel inputs]
   (code-step (vec (concat (if (string? v) (make-vec v) v)
-                          (util/repeated-seq 0 100)))
+                          (util/repeated-seq 0 1000)))
              pos rel inputs))
 
 (defn run-to-end [v pos rel inputs]
   (loop [output (code-step (vec (concat (if (string? v) (make-vec v) v)
-                                        (util/repeated-seq 0 100)))
+                                        (util/repeated-seq 0 1000)))
                            pos rel inputs)]
     (if (number? output) output
         (recur (apply code-step output)))))

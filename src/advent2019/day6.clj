@@ -8,16 +8,16 @@
   (if (empty? orbits) acc-map
       (let [center (subs (first orbits) 0 3)
             outer (subs (first orbits) 4)]
-          (recur (rest orbits)
-                 (assoc acc-map
-                        outer (if (contains? acc-map outer)
-                                (cons center (acc-map outer))
-                                `(~center))
-                        center (if (= center "COM")
-                                 (cons nil `(~outer))
-                                 (if (contains? acc-map center)
-                                   (util/insert-second outer (acc-map center))
-                                   `(~outer))))))))
+        (recur (rest orbits)
+               (assoc acc-map
+                      outer (if (contains? acc-map outer)
+                              (cons center (acc-map outer))
+                              `(~center))
+                      center (if (= center "COM")
+                               (cons nil `(~outer))
+                               (if (contains? acc-map center)
+                                 (util/insert-second outer (acc-map center))
+                                 `(~outer))))))))
 
 ; map format: key = body, value = (cons (body that it is orbiting)
 ;                                       (bodies that are orbiting it))
@@ -52,7 +52,7 @@
                                      `(~(util/mem % visited)
                                        ~(util/mem % (map first queue)))))
                          (o-map cur))]
-        (if (util/in-seq target next) (inc dist)
+        (if (util/mem target next) (inc dist)
             (recur o-map target 
                    (cons cur visited) 
                    (concat (util/zip next 
