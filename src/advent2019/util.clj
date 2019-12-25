@@ -96,3 +96,19 @@
   (for [c1 coll1
         c2 coll2]
     `(~c1 ~c2)))
+
+; makes a list where each key points to a list of vals
+; i.e. duplicate keys add an entry to the list of that key
+; lists are sorted based on cmp.
+(defn mk-assoc-list [keys vals sortfn]
+  (loop [ks keys
+         vs vals
+         acc {}]
+    (if (empty? ks) acc
+        (recur (rest ks) (rest vs)
+               (if (contains? acc (first ks))
+                 (assoc acc (first ks) (sortfn (cons (first vs) (get acc (first ks)))))
+                 (assoc acc (first ks) `(~(first vs))))))))
+
+(defn dist [x y]
+  (Math/sqrt (+ (* x x) (* y y))))
