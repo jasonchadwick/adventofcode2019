@@ -16,12 +16,12 @@
 
 (defn make-vec [fname]
   (with-open [rdr (clojure.java.io/reader fname)]
-    (vec (map (fn [s] (Integer/parseInt s)) (clojure.string/split (slurp rdr) #",")))))
+    (vec (map #(Long/parseLong %) (clojure.string/split (slurp rdr) #",")))))
 
 ; creates a function which gives the nth argument's value
 ; (output function should only be used to get *VALUES* not output indices)
 (defn make-val-fn [v args arg-modes]
-  (fn [rel n] 
+  (fn [rel n]
     (case (nth arg-modes n)
       0 (nth v (nth args n))
       1 (nth args n)
@@ -46,7 +46,7 @@
   ;(println v pos rel inputs)
   (let [opcode (mod (nth v pos) 100)
         arg-ct (nth argnums (mod opcode 10))
-        args (map (fn [n] (nth v (+ 1 n pos)))
+        args (map #(nth v (+ 1 pos %))
                   (range arg-ct))
         modes ((fn get-modes [code n max]
                  (if (>= n max) nil
@@ -63,6 +63,7 @@
                            (== opcode 9) 1
                            (== opcode 99) 0))
         final (== opcode 99)
+        ;test (println opcode args)
         newv (case opcode
                1 (assoc v (posfn rel 2) (+ (valfn rel 0) (valfn rel 1)))
                2 (assoc v (posfn rel 2) (* (valfn rel 0) (valfn rel 1)))
@@ -87,12 +88,14 @@
       outputting `(~newv ~newpos ~newrel ~newinputs)
       :else (recur newv newpos newrel newinputs))))
 
-(defn run-code [v pos rel inputs]
-  (code-step (vec (concat (if (string? v) (make-vec v) v)
-                          (util/repeated-seq 0 1000)))
-             pos rel inputs))
+(defn run-code [v pos rel inputs init]
+  (let [code (if (string? v) (make-vec v) v)]
+    (code-step (if init 
+                 (vec (concat code (util/repeated-seq 0 1000)))
+                 code)
+               pos rel inputs)))
 
-(defn run-to-end [v pos rel inputs]
+(defn run-to-end [v pos rel inputs init]
   (loop [output (code-step (vec (concat (if (string? v) (make-vec v) v)
                                         (util/repeated-seq 0 1000)))
                            pos rel inputs)]
