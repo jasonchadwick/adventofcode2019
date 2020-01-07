@@ -39,9 +39,10 @@
 (def argnums [0 3 3 1 1 2 2 3 3 1
               0 0 0 0 0 0 0 0 0 0])
 
+; runs the code until an output is produced (not necessarily last output)
 ; TODO: add support for "unbounded array" style memory
 ; not sure why it doesnt work for [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-;                 supposed to "self-replicate"
+;                 (supposed to "self-replicate")
 (defn code-step [v pos rel inputs]
   ;(println v pos rel inputs)
   (let [opcode (mod (nth v pos) 100)
