@@ -2,11 +2,10 @@
   (:require [advent2019.intcode :as intcode])
   (:require [clojure.set :as set]))
 
-(defn try-settings [fname settings input init]
+(defn try-settings [fname settings input]
   (if (empty? settings) input
       (recur fname (rest settings)
-             (intcode/run-to-end fname 0 0 `(~(first settings) ~input) init)
-             false)))
+             (intcode/run-to-end fname 0 0 `(~(first settings) ~input)))))
 
 (defn try-all [fname]
   (let [nums #{0 1 2 3 4}]
@@ -17,7 +16,7 @@
            c (set/difference nums #{a b})
            d (set/difference nums #{a b c})
            e (set/difference nums #{a b c d})]
-       (try-settings fname `(~a ~b ~c ~d ~e) 0 true)))))
+       (try-settings fname `(~a ~b ~c ~d ~e) 0)))))
 
 
 ; part 2

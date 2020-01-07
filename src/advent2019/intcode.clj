@@ -95,7 +95,7 @@
                  code)
                pos rel inputs)))
 
-(defn run-to-end [v pos rel inputs init]
+(defn run-to-end [v pos rel inputs]
   (loop [output (code-step (vec (concat (if (string? v) (make-vec v) v)
                                         (util/repeated-seq 0 1000)))
                            pos rel inputs)]
