@@ -1,5 +1,6 @@
 (ns advent2019.util
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string])
+  (:require [clojure.math.numeric-tower :as num]))
 ; general functions that may be useful in more than one file
 
 
@@ -110,5 +111,12 @@
                  (assoc acc (first ks) (sortfn (cons (first vs) (get acc (first ks)))))
                  (assoc acc (first ks) `(~(first vs))))))))
 
+; Pythagorean distance formula
 (defn dist [x y]
   (Math/sqrt (+ (* x x) (* y y))))
+
+; LCM of a variable number of arguments
+(defn lcm [x & rest]
+  (if (nil? rest)
+    x
+    (num/lcm x (apply lcm rest))))
