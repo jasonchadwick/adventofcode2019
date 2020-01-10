@@ -1,5 +1,6 @@
 (ns advent2019.legacy
-  (:require [advent2019.util :as util]))
+  (:require [advent2019.util :as util])
+  (:require [clojure.java.io]))
 
 ;code that I've thrown out but don't want to delete because I spent a lot of time on it
 
