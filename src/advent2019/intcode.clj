@@ -90,11 +90,13 @@
       :else (recur newv newpos newrel newinputs))))
 
 (defn run-code [v pos rel inputs init]
-  (let [code (if (string? v) (make-vec v) v)]
-    (code-step (if init 
-                 (vec (concat code (util/repeated-seq 0 1000)))
-                 code)
-               pos rel inputs)))
+  (let [code (if (string? v) (make-vec v) v)
+        output (code-step (if init
+                            (vec (concat code (util/repeated-seq 0 1000)))
+                            code)
+                          pos rel inputs)]
+    (if (number? output) output
+        (concat output `(~false)))))
 
 (defn run-to-end [v pos rel inputs]
   (loop [output (code-step (vec (concat (if (string? v) (make-vec v) v)

@@ -5,7 +5,7 @@
 (defn paint-wall-1 [robot-pos robot-dir prev-painted v pos rel inputs init]
   (let [color-output (intcode/run-code v pos rel inputs init)
         turn-output (if (number? color-output) nil
-                        (apply intcode/run-code (concat color-output '(false))))]
+                        (apply intcode/run-code color-output))]
     (println robot-pos)
     (if (number? color-output) prev-painted
         (let [new-dir (mod (+ robot-dir
